@@ -7,20 +7,31 @@ class InsufficientInventoryError(Exception):
 
 class InventoryManager:
 
-    __inventory = dict(); # key:product value: dict {"total", " reserve"}
+    __inventory = dict(); # key:product value: total
+
+    @staticmethod
+    def finalizeOrder(cart: Cart):
+        if(type(cart) != Cart):
+            raise ValueError("Wrong input data type");
+        try:
+            tempInv = InventoryManager.__inventory;
+            for(items in cart.list_items):
+                removeProduct(items.product, items.quantity);
+            cart.clear();
+        except:
+            InventoryManager.__inventory = tempInv;
+            raise;
 
     @staticmethod
     def addProduct(product: Product, amount: int):
         try:
             InventoryManager.__validateInput(product, amount)
-            stockLevel = InventoryManager.__getStockLevel(product);
-            stockLevel["total"] += amount;
-            InventoryManager.__inventory[product] = stockLevel;
-            print(f'Add {product.name} by {amount}. Total {stockLevel["total"]}');
+            InventoryManager.__inventory[product] += amount;
+            # print(f'Add {product.name} by {amount}. Total {stockLevel["total"]}');
 
-        except ProductNotFoundError: #add new product
-            InventoryManager.__inventory[product] = {"total": amount, "reserve": 0};
-            print(f'Add new product {product.name}. Amount: {amount}');
+        except KeyError: #add new product
+            InventoryManager.__inventory[product] = amount;
+            # print(f'Add new product {product.name}. Amount: {amount}');
 
         except:
             raise;        
@@ -30,12 +41,11 @@ class InventoryManager:
         try:
             InventoryManager.__validateInput(product, amount)
             stockLevel = InventoryManager.__getStockLevel(product);
-            if(stockLevel["total"] - stockLevel["reserve"] < amount):
-                raise InsufficientInventoryError("Not enough products in inventory");
+            if(InventoryManager.__inventory[product] < amount):
+                raise InsufficientInventoryError("Cannot remove more than what is in the inventory");
             else:
-                stockLevel["total"] -= amount;
-                InventoryManager.__inventory[product] = stockLevel;
-                print(f'Remove {product.name} by {amount}. Remaining: {stockLevel["total"]}');
+                InventoryManager.__inventory[product] -= amount;
+                # print(f'Remove {product.name} by {amount}. Remaining: {InventoryManager.__inventory[product]}');
         except:
             raise;
 
@@ -63,52 +73,12 @@ class InventoryManager:
     def set(product: Product, amount: int):
         try:
             InventoryManager.__validateInput(product, amount);
-            stockLevel = InventoryManager.__getStockLevel(product);
+            InventoryManager.__inventory[product] = amount;
+            # print(f'New total amount: {amount}');
 
-            if(amount < stockLevel["reserve"]):
-                raise InsufficientInventoryError('Cannot set to be lower than the reserved amount');
-            else:
-                stockLevel["total"] = amount;
-                InventoryManager.__inventory[product] = stockLevel;
-                print(f'New total amount: {stockLevel["total"]}');
+        except KeyError: #add new product
+            InventoryManager.__inventory[product] = amount;
+            # print(f'Add new product {product.name}. Amount: {amount}');
 
-        except ProductNotFoundError: #add new product
-            InventoryManager.__inventory[product] = {"total": amount, "reserve": 0};
-            print(f'Add new product {product.name}. Amount: {amount}');
-
-        except:
-            raise;
-
-
-    
-    @staticmethod
-    def reserve(product: Product, amount: int):
-        try:
-            InventoryManager.__validateInput(product, amount);
-            stockLevel = InventoryManager.__getStockLevel(product);
-
-            if(stockLevel["total"] - stockLevel["reserve"] < amount):
-                raise InsufficientInventoryError('Cannot reserve more than the total amount');
-            else:
-                stockLevel["reserve"] += amount;
-                InventoryManager.__inventory["product"] = stockLevel;
-                print(f'New total reserve: {stockLevel["reserve"]}');
-        except:
-            raise;
-        
-        
-        
-    @staticmethod
-    def release(product, amount):
-        try:
-            InventoryManager.__validateInput(product, amount);
-            stockLevel = InventoryManager.__getStockLevel(product);
-
-            if(stockLevel["reserve"] < amount):
-                raise InsufficientInventoryError('Cannot release more than the reserved amount');
-            else:
-                stockLevel["reserve"] -= amount;
-                InventoryManager.__inventory[product] = stockLevel;
-                print(f'Remaining reserve: {stockLevel["reserve"]}');
         except:
             raise;
