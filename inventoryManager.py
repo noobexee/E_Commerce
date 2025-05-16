@@ -13,7 +13,18 @@ class InventoryManager:
     __inventory = dict();
 
     @staticmethod
-    def validateInput(product: Product, amount: int):
+    def getStockLevel(product: Product):
+        if(type(product) != Product):
+            raise ValueError("Wrong input data type");
+
+        try:
+            return InventoryManager.__inventory[product];
+
+        except KeyError:
+            raise ProductNotFoundError(f'{product.name} is not found');
+
+    @staticmethod
+    def __validateInput(product: Product, amount: int):
         if(type(product) != Product or type(amount) != int):
             raise ValueError("Wrong input data type");
         
@@ -24,57 +35,52 @@ class InventoryManager:
     def set(product: Product, amount: int):
         try:
             InventoryManager.validateInput(product, amount);
+            stockLevel = InventoryManager.__inventory[product];
+
+            if(amount < stockLevel["reserve"]):
+                raise InsufficientInventoryError('Cannot set to be lower than the reserved amount');
+            else:
+                stockLevel["total"] = amount;
+                InventoryManager.__inventory[product] = stockLevel;
+                print(f'New total amount: {stockLevel["total"]}');
+
+        except ProductNotFoundError: #add new product
+            InventoryManager.__inventory[product] = {"total": amount, "reserve": 0};
+            print(f'Add new product {product.name}. Amount: {amount}');
+
         except:
             raise;
 
-        try:
-            stockLevel = InventoryManager.__inventory[product];
-        except KeyError:
-            InventoryManager.__inventory[product] = {"total": amount, "reserve": 0};
-            print(f'Add new product {product.name}. Amount: {amount}');
-            return;
 
-        if(amount < stockLevel["reserve"]):
-            raise InsufficientInventoryError('Cannot set to be lower than the reserved amount');
-        else:
-            stockLevel["total"] = amount;
-            InventoryManager.__inventory[product] = stockLevel;
-            print(f'New total amount: {stockLevel["total"]}');
     
     @staticmethod
     def reserve(product: Product, amount: int):
         try:
             InventoryManager.validateInput(product, amount);
+            stockLevel = InventoryManager.getStockLevel(product);
+
+            if(stockLevel["total"] - stockLevel["reserve"] < amount):
+                raise InsufficientInventoryError('Cannot reserve more than the total amount');
+            else:
+                stockLevel["reserve"] += amount;
+                InventoryManager.__inventory["product"] = stockLevel;
+                print(f'New total reserve: {stockLevel["reserve"]}');
         except:
             raise;
         
-        try:
-            stockLevel = InventoryManager.__inventory[product];
-        except KeyError:
-            raise ProductNotFoundError(f'{product.name} is not found');
         
-        if(stockLevel["total"] - stockLevel["reserve"] < amount):
-            raise InsufficientInventoryError('Cannot reserve more than the total amount');
-        else:
-            stockLevel["reserve"] += amount;
-            InventoryManager.__inventory["product"] = stockLevel;
-            print(f'New total reserve: {stockLevel["reserve"]}');
         
     @staticmethod
     def release(product, amount):
         try:
             InventoryManager.validateInput(product, amount);
+            stockLevel = InventoryManager.getStockLevel(product);
+            
+            if(stockLevel["reserve"] < amount):
+                raise InsufficientInventoryError('Cannot release more than the reserved amount');
+            else:
+                stockLevel["reserve"] -= amount;
+                InventoryManager.__inventory[product] = stockLevel;
+                print(f'Remaining reserve: {stockLevel["reserve"]}');
         except:
             raise;
-        
-        try:
-            stockLevel = InventoryManager.__inventory[product];
-        except KeyError:
-            raise ProductNotFoundError(f'{product.name} is not found');
-
-        if(stockLevel["reserve"] < amount):
-            raise InsufficientInventoryError('Cannot release more than the reserved amount');
-        else:
-            stockLevel["reserve"] -= amount;
-            InventoryManager.__inventory[product] = stockLevel;
-            print(f'Remaining reserve: {stockLevel["reserve"]}');
