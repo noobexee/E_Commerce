@@ -1,6 +1,7 @@
 from cart import Cart
 from order import Order
 from discountPolicy import DiscountPolicy
+from inventoryManager import InventoryManager
 
 class Customer:
 
@@ -12,7 +13,9 @@ class Customer:
     def name(self):
         return self.__NAME
     
-    def place_order(self, discount=None):
-        order = Order(self, self.cart.items, discount)
+    def place_order(self, discount_policy: DiscountPolicy = None):
+        for item in self.cart.list_items():
+            InventoryManager.removeProduct(item.product, item.quantity)
+        order = Order(self.cart.items.copy(), self.cart.total_price(), discount_policy)
         self.cart.clear()
         return order

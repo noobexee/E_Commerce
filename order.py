@@ -26,16 +26,20 @@ class Order :
     
 
     def get_final_amount(self) -> float:
-        return self.discount_policy.apply_discount(self.total_price)
+        return self.__discount_policy.apply_discount(self.__total_price)
 
     @property
     def id(self) :
         return self.__ID
 
     @property
-    def orderStatus(self) :
+    def status(self) :
         return self.__status
     
     @property
     def items(self) :
         return self.__ITEMS
+    
+    @property
+    def totalprice(self) :
+        return self.__total_price
