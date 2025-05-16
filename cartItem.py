@@ -21,7 +21,13 @@ class CartItem:
             raise InvalidQuantityError("Quantity to add must be positive.")
         self._quantity += quantity
         print(f"Successfully add {quantity} {self._product.name} to CartItem")
+   
+    def total_price(self):
+        return self.product.price * self.quantity
 
+    def copy(self):
+        return CartItem(self.product, self.quantity)
+    
     @property
     def product(self):
         return self._product
@@ -29,3 +35,4 @@ class CartItem:
     @property
     def quantity(self):
         return self._quantity
+    
