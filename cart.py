@@ -40,7 +40,7 @@ class Cart:
 
     def clear_cart(self):
         for item in self.items.values():
-            InventoryManager.release_stock(item.product, item.quantity)
+            InventoryManager.release(item.product, item.quantity)
         self.items.clear()
 
     def clear(self):
