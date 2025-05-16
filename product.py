@@ -1,9 +1,10 @@
-class Product:
+from typing import Final;
 
+class Product:
     def __init__ (self, id, name, price):
-        self.__ID = id;
-        self.__NAME = name;
-        self.__PRICE = price;
+        self.__ID: Final = id;
+        self.__NAME: Final = name;
+        self.__PRICE: Final = price;
 
     @property
     def id(self):
