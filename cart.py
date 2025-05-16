@@ -12,14 +12,14 @@ class Cart:
             print(f"[Add] {e}")
             return False
 
-        if product.id in self.items:
+        if product in self.items:
             self.items[product].quantity += quantity
         else:
             self.items[product] = CartItem(product, quantity)
         return True
 
     def remove_item(self, product, quantity):
-        if product.id not in self.items:
+        if product not in self.items:
             print(f"{product.name} not in cart.")
             return False
 
