@@ -39,7 +39,7 @@ class InventoryManager:
         else:
             stockLevel["total"] = amount;
             __inventory[product] = stockLevel;
-            print(f'Success! New total amount: {stockLevel["total"]}');
+            print(f'New total amount: {stockLevel["total"]}');
     
     @staticmethod
     def reserve(product, amount):
