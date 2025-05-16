@@ -34,8 +34,8 @@ class InventoryManager:
     @staticmethod
     def set(product: Product, amount: int):
         try:
-            InventoryManager.validateInput(product, amount);
-            stockLevel = InventoryManager.__inventory[product];
+            InventoryManager.__validateInput(product, amount);
+            stockLevel = InventoryManager.getStockLevel(product);
 
             if(amount < stockLevel["reserve"]):
                 raise InsufficientInventoryError('Cannot set to be lower than the reserved amount');
@@ -56,7 +56,7 @@ class InventoryManager:
     @staticmethod
     def reserve(product: Product, amount: int):
         try:
-            InventoryManager.validateInput(product, amount);
+            InventoryManager.__validateInput(product, amount);
             stockLevel = InventoryManager.getStockLevel(product);
 
             if(stockLevel["total"] - stockLevel["reserve"] < amount):
@@ -73,9 +73,9 @@ class InventoryManager:
     @staticmethod
     def release(product, amount):
         try:
-            InventoryManager.validateInput(product, amount);
+            InventoryManager.__validateInput(product, amount);
             stockLevel = InventoryManager.getStockLevel(product);
-            
+
             if(stockLevel["reserve"] < amount):
                 raise InsufficientInventoryError('Cannot release more than the reserved amount');
             else:
