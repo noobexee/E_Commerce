@@ -12,7 +12,7 @@ class InventoryManager:
     @staticmethod
     def addProduct(product: Product, amount: int):
         try:
-            InventoryManager.validateInput(product, amount)
+            InventoryManager.__validateInput(product, amount)
             stockLevel = InventoryManager.__getStockLevel(product);
             stockLevel["total"] += amount;
             InventoryManager.__inventory[product] = stockLevel;
@@ -28,7 +28,7 @@ class InventoryManager:
     @staticmethod
     def removeProduct(product: Product, amount: int):
         try:
-            InventoryManager.validateInput(product, amount)
+            InventoryManager.__validateInput(product, amount)
             stockLevel = InventoryManager.__getStockLevel(product);
             if(stockLevel["total"] - stockLevel["reserve"] < amount):
                 raise InsufficientInventoryError("Not enough products in inventory");
@@ -51,7 +51,7 @@ class InventoryManager:
             raise ProductNotFoundError(f'{product.name} is not found');
 
     @staticmethod
-    def validateInput(product: Product, amount: int):
+    def __validateInput(product: Product, amount: int):
         if type(product) != Product or type(amount) != int:
             raise ValueError("Wrong input data type")
 
@@ -62,7 +62,7 @@ class InventoryManager:
     @staticmethod
     def set(product: Product, amount: int):
         try:
-            InventoryManager.validateInput(product, amount);
+            InventoryManager.__validateInput(product, amount);
             stockLevel = InventoryManager.__getStockLevel(product);
 
             if(amount < stockLevel["reserve"]):
@@ -84,7 +84,7 @@ class InventoryManager:
     @staticmethod
     def reserve(product: Product, amount: int):
         try:
-            InventoryManager.validateInput(product, amount);
+            InventoryManager.__validateInput(product, amount);
             stockLevel = InventoryManager.__getStockLevel(product);
 
             if(stockLevel["total"] - stockLevel["reserve"] < amount):
@@ -101,7 +101,7 @@ class InventoryManager:
     @staticmethod
     def release(product, amount):
         try:
-            InventoryManager.validateInput(product, amount);
+            InventoryManager.__validateInput(product, amount);
             stockLevel = InventoryManager.__getStockLevel(product);
 
             if(stockLevel["reserve"] < amount):
