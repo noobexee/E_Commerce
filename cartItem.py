@@ -4,7 +4,7 @@ from exception import InsufficientQuantityError, InvalidQuantityError
 class CartItem:
     def __init__(self, product: Product, quantity: int):
         if(type(product) != Product or type(quantity) != int):
-            raise ValueError("Wrong input data type");
+            raise ValueError("Wrong input data type")
         if quantity <= 0:
             raise InvalidQuantityError("Initial quantity must be greater than 0.")
             
@@ -13,7 +13,7 @@ class CartItem:
 
     def removeQuantity(self, quantity: int):
         if(type(quantity) != int):
-            raise ValueError("Wrong input data type");
+            raise ValueError("Wrong input data type")
         if quantity <= 0:
             raise InvalidQuantityError("Quantity to remove must be positive.")
         if quantity > self._quantity:
@@ -24,7 +24,7 @@ class CartItem:
 
     def addQuantity(self, quantity: int):
         if(type(quantity) != int):
-            raise ValueError("Wrong input data type");
+            raise ValueError("Wrong input data type")
         if quantity <= 0:
             raise InvalidQuantityError("Quantity to add must be positive.")
 
