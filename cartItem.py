@@ -22,7 +22,7 @@ class CartItem:
         self._quantity -= quantity
         print(f"Successfully remove {quantity} {self._product.name} to CartItem")
 
-    def addQuantity(self, quantity):
+    def addQuantity(self, quantity: int):
         if(type(quantity) != int):
             raise ValueError("Wrong input data type");
         if quantity <= 0:

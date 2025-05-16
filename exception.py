@@ -3,3 +3,6 @@ class InvalidQuantityError(Exception):
 
 class InsufficientQuantityError(Exception):
     pass
+
+class ProductNotFoundError(Exception):
+    pass
