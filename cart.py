@@ -3,19 +3,19 @@ from inventoryManager import InventoryManager
 
 class Cart:
     def __init__(self):
-        self.items = {}  # key: product.id, value: CartItem
+        self.items = {}  # key: product, value: CartItem
 
     def add_item(self, product, quantity):
         try:
-            InventoryManager.reserve(product.id, quantity)
+            InventoryManager.reserve(product, quantity)
         except Exception as e:
             print(f"[Add] {e}")
             return False
 
         if product.id in self.items:
-            self.items[product.id].quantity += quantity
+            self.items[product].quantity += quantity
         else:
-            self.items[product.id] = CartItem(product, quantity)
+            self.items[product] = CartItem(product, quantity)
         return True
 
     def remove_item(self, product, quantity):
@@ -23,13 +23,13 @@ class Cart:
             print(f"{product.name} not in cart.")
             return False
 
-        cart_item = self.items[product.id]
+        cart_item = self.items[product]
         if quantity >= cart_item.quantity:
-            InventoryManager.release(product.id, cart_item.quantity)
-            del self.items[product.id]
+            InventoryManager.release(product, cart_item.quantity)
+            del self.items[product]
         else:
             cart_item.quantity -= quantity
-            InventoryManager.release(product.id, quantity)
+            InventoryManager.release(product, quantity)
         return True
 
     def total_price(self):
@@ -40,7 +40,7 @@ class Cart:
 
     def clear_cart(self):
         for item in self.items.values():
-            InventoryManager.release_stock(item.product.id, item.quantity)
+            InventoryManager.release_stock(item.product, item.quantity)
         self.items.clear()
 
     def clear(self):
