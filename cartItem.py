@@ -1,7 +1,6 @@
 from product import Product
 from exception import InsufficientQuantityError, InvalidQuantityError
 
-
 class CartItem:
     def __init__(self, product: Product, quantity: int):
         if quantity <= 0:
@@ -15,11 +14,13 @@ class CartItem:
         if quantity > self._quantity:
             raise InsufficientQuantityError("Not enough quantity in cart to remove.")
         self._quantity -= quantity
+        print(f"Successfully remove {quantity} {self._product.name} to CartItem")
 
     def addQuantity(self, quantity):
         if quantity <= 0:
             raise InvalidQuantityError("Quantity to add must be positive.")
         self._quantity += quantity
+        print(f"Successfully add {quantity} {self._product.name} to CartItem")
 
     @property
     def product(self):
