@@ -13,7 +13,7 @@ class InventoryManager:
     __inventory = dict();
 
     @staticmethod
-    def validateInput(product, amount):
+    def validateInput(product: Product, amount: int):
         if(type(product) != Product or type(amount) != int):
             raise ValueError("Wrong input data type");
         
@@ -21,7 +21,7 @@ class InventoryManager:
             raise ValueError("The amount cannot be less than 0");
 
     @staticmethod
-    def set(product, amount):
+    def set(product: Product, amount: int):
         try:
             InventoryManager.validateInput(product, amount);
         except:
@@ -38,11 +38,11 @@ class InventoryManager:
             raise InsufficientInventoryError('Cannot set to be lower than the reserved amount');
         else:
             stockLevel["total"] = amount;
-            __inventory[product] = stockLevel;
+            InventoryManager.__inventory[product] = stockLevel;
             print(f'New total amount: {stockLevel["total"]}');
     
     @staticmethod
-    def reserve(product, amount):
+    def reserve(product: Product, amount: int):
         try:
             InventoryManager.validateInput(product, amount);
         except:
