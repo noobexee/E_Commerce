@@ -17,7 +17,6 @@ class Cart:
     def add_item(self, product: Product, quantity: int):
         try:
             Cart.__validateInput(product, quantity)
-            InventoryManager.removeProduct(quantity);
             if product in self.items:
                 cart_item = self.items[product]
                 cart_item.addQuantity(quantity)
@@ -35,7 +34,6 @@ class Cart:
             cart_item.removeQuantity(quantity)
             if(cart_item.quantity == 0):
                 del self.items[product];
-            InventoryManager.addProduct(quantity);
         except:
             raise;
 
