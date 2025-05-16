@@ -13,7 +13,8 @@ class Cart:
             return False
 
         if product in self.items:
-            self.items[product].quantity += quantity
+            cart_item = self.items[product]
+            cart_item.addQuantity(quantity)
         else:
             self.items[product] = CartItem(product, quantity)
         return True
@@ -28,7 +29,7 @@ class Cart:
             InventoryManager.release(product, cart_item.quantity)
             del self.items[product]
         else:
-            cart_item.quantity -= quantity
+            cart_item.removeQuantity(quantity)
             InventoryManager.release(product, quantity)
         return True
 
