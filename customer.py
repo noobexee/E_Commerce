@@ -11,7 +11,7 @@ class Customer:
     def name(self):
         return self.__NAME
     
-    def place_order(self, inventory_manager):
+    def place_order(self):
         order = Order(self, self.cart.items)
         self.cart.clear()
         return order
