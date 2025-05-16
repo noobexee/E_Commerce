@@ -1,6 +1,7 @@
 from cartItem import CartItem
 from inventoryManager import InventoryManager
 from exception import ProductNotFoundError;
+from product import Product
 
 class Cart:
     def __init__(self):
