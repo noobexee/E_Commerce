@@ -10,14 +10,13 @@ class InventoryManager:
     __inventory = dict(); # key:product value: total
 
     @staticmethod
-    def finalizeOrder(cart: Cart):
-        if(type(cart) != Cart):
+    def finalizeOrder(itemList: list):
+        if(type(itemList) != list):
             raise ValueError("Wrong input data type");
         try:
             tempInv = InventoryManager.__inventory;
-            for(items in cart.list_items):
-                removeProduct(items.product, items.quantity);
-            cart.clear();
+            for item in itemList:
+                InventoryManager.removeProduct(item.product, item.quantity);
         except:
             InventoryManager.__inventory = tempInv;
             raise;
@@ -40,7 +39,6 @@ class InventoryManager:
     def removeProduct(product: Product, amount: int):
         try:
             InventoryManager.__validateInput(product, amount)
-            stockLevel = InventoryManager.__getStockLevel(product);
             if(InventoryManager.__inventory[product] < amount):
                 raise InsufficientInventoryError("Cannot remove more than what is in the inventory");
             else:
@@ -48,17 +46,6 @@ class InventoryManager:
                 # print(f'Remove {product.name} by {amount}. Remaining: {InventoryManager.__inventory[product]}');
         except:
             raise;
-
-    @staticmethod
-    def __getStockLevel(product: Product):
-        if(type(product) != Product):
-            raise ValueError("Wrong input data type");
-
-        try:
-            return InventoryManager.__inventory[product];
-
-        except KeyError:
-            raise ProductNotFoundError(f'{product.name} is not found');
 
     @staticmethod
     def __validateInput(product: Product, amount: int):

@@ -7,19 +7,25 @@ class Customer:
 
     def __init__(self, name):
         self.__NAME = name
-        self.cart = Cart()
+        self.__cart = Cart()
+        self.__orders = list();
 
     @property
     def name(self):
         return self.__NAME
+
+    @property
+    def orders(self):
+        return self.__orders;
+    
+    @property
+    def cart(self):
+        return self.__cart;
     
     def place_order(self, discount_policy: DiscountPolicy = None):
-        for item in self.cart.list_items():
-            try :
-                InventoryManager.removeProduct(item.product, item.quantity)
-            except InsufficientInventoryError :
-                print(f"Insufficient inventory for product: {item.product.name}")
-                return None
-        order = Order(self.cart.items.copy(), self.cart.total_price(), discount_policy)
-        self.cart.clear()
-        return order
+        try:
+            InventoryManager.finalizeOrder(self.__cart.list_items());
+            self.__orders.append(Order(self.__cart, discount_policy))
+            self.__cart.clear();
+        except:
+            raise;

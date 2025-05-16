@@ -44,10 +44,5 @@ class Cart:
     def list_items(self):
         return list(self.items.values())
 
-    def clear_cart(self): #clear by return all items
-        for item in self.items.values():
-            InventoryManager.addProduct(item.product, item.quantity)
-        self.items.clear()
-
     def clear(self): #clear after finished with cart
         self.items.clear()

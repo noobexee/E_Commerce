@@ -2,6 +2,7 @@ from discountPolicy import *
 from customer import Customer
 from inventoryManager  import InventoryManager
 from product import Product
+from cart import *;
 
 def main():
     # Step 1: Create products
@@ -44,11 +45,12 @@ def main():
     # Step 8: Simulate placing an order (deduct officially)
     print("\nPlacing order...")
     discount = FixedAmountDiscount(1000)
-    order = alice.place_order(discount_policy=discount)
+    alice.place_order(discount_policy=discount)
+    order = alice.orders[0];
 
     # Print order summary
     print("\nOrder summary:")
-    for item in order.items.values():                                    
+    for item in order.items:                                    
         print(f"- {item.product.name} x {item.quantity}")                                                      
     print(f"Status: {order.status}")
     print(f"Total (after discount): {order.get_final_amount()}")
